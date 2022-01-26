@@ -14,7 +14,7 @@ import { Footer } from './Common/Footer/Footer';
 
 const theme = createTheme({
 	palette: {
-		mode: 'dark',
+		mode: 'light',
 	},
 });
 

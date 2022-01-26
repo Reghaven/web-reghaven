@@ -5,7 +5,7 @@ export function Footer() {
 	return (
 		<Box
 			sx={{
-				backgroundColor: '#606060',
+				backgroundColor: 'primary.main',
 				minHeight: 100,
 				flexGrow: 1,
 			}}
