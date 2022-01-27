@@ -1,7 +1,32 @@
 import React, { useState } from 'react';
-import { Typography, Box, Paper, TextField, Button, Grid } from '@mui/material';
+import {
+	Alert,
+	Typography,
+	Box,
+	Paper,
+	TextField,
+	Button,
+	Stack,
+} from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 
-export function LoginBox() {
+export interface LoginBoxLoginResult {
+	username: string;
+	password: string;
+}
+
+export interface LoginBoxRegisterResult {
+	username: string;
+	email: string;
+	password: string;
+}
+
+export function LoginBox(props: {
+	loginErrorText?: string;
+	loading?: boolean;
+	onLogin?: (result: LoginBoxLoginResult) => unknown;
+	onRegister?: (result: LoginBoxRegisterResult) => unknown;
+}) {
 	enum Modes {
 		LOGIN,
 		REGISTER,
@@ -9,69 +34,128 @@ export function LoginBox() {
 
 	const [mode, setMode] = useState<Modes>(Modes.LOGIN);
 
+	const [loginCredentials, setLoginCredentials] = useState({
+		username: '',
+		password: '',
+	});
+	const [registerCredentials, setRegisterCredentials] = useState({
+		username: '',
+		password: '',
+		email: '',
+	});
+
 	const Login = (
-		<Grid
-			container
-			direction={'column'}
-			alignItems={'center'}
-			justifyContent={'center'}
-		>
-			<Typography variant={'h5'} sx={{ marginBottom: 2 }}>
+		<Stack spacing={2}>
+			<Typography variant={'h5'} align={'center'}>
 				Login
 			</Typography>
+			{props.loginErrorText && (
+				<Alert severity={'error'}>{props.loginErrorText}</Alert>
+			)}
 			<TextField
+				value={loginCredentials.username}
+				onChange={(event) =>
+					setLoginCredentials((prev) => ({
+						...prev,
+						username: event.target.value,
+					}))
+				}
 				variant={'outlined'}
 				label={'Username'}
-				sx={{ width: '100%', marginBottom: 2 }}
+				sx={{ width: '100%' }}
 			/>
 			<TextField
+				value={loginCredentials.password}
+				onChange={(event) =>
+					setLoginCredentials((prev) => ({
+						...prev,
+						password: event.target.value,
+					}))
+				}
 				type={'password'}
 				variant={'outlined'}
 				label={'Password'}
-				sx={{ width: '100%', marginBottom: 2 }}
+				sx={{ width: '100%' }}
 			/>
-			<Button variant={'contained'} sx={{ marginBottom: 1 }}>
+			<LoadingButton
+				loading={props.loading || false}
+				variant={'contained'}
+				onClick={() =>
+					props.onLogin &&
+					props.onLogin({
+						username: loginCredentials.username,
+						password: loginCredentials.password,
+					})
+				}
+			>
 				Login
-			</Button>
+			</LoadingButton>
 			<Button variant={'text'} onClick={() => setMode(Modes.REGISTER)}>
 				new account
 			</Button>
-		</Grid>
+		</Stack>
 	);
 
 	const Register = (
-		<Grid
-			container
-			direction={'column'}
-			alignItems={'center'}
-			justifyContent={'center'}
-		>
-			<Typography variant={'h5'} sx={{ marginBottom: 2 }}>
+		<Stack spacing={2}>
+			<Typography variant={'h5'} align={'center'}>
 				Create new account
 			</Typography>
 			<TextField
+				value={registerCredentials.username}
+				onChange={(event) =>
+					setRegisterCredentials((prev) => ({
+						...prev,
+						username: event.target.value,
+					}))
+				}
 				variant={'outlined'}
 				label={'Username'}
-				sx={{ width: '100%', marginBottom: 2 }}
+				sx={{ width: '100%' }}
 			/>
 			<TextField
+				value={registerCredentials.email}
+				onChange={(event) =>
+					setRegisterCredentials((prev) => ({
+						...prev,
+						email: event.target.value,
+					}))
+				}
 				variant={'outlined'}
 				label={'Email-Address'}
-				sx={{ width: '100%', marginBottom: 2 }}
+				sx={{ width: '100%' }}
 			/>
 			<TextField
+				value={registerCredentials.password}
+				onChange={(event) =>
+					setRegisterCredentials((prev) => ({
+						...prev,
+						password: event.target.value,
+					}))
+				}
 				type={'password'}
 				variant={'outlined'}
 				label={'Password'}
-				sx={{ width: '100%', marginBottom: 2 }}
+				sx={{ width: '100%' }}
 			/>
-			<Button variant={'contained'} sx={{ marginBottom: 1 }}>
-				Login
-			</Button>
+			<LoadingButton
+				onClick={() =>
+					props.onRegister &&
+					props.onRegister({
+						username: registerCredentials.username,
+						password: registerCredentials.password,
+						email: registerCredentials.email,
+					})
+				}
+				loading={props.loading || false}
+				variant={'contained'}
+			>
+				Register
+			</LoadingButton>
 			<Button variant={'text'} onClick={() => setMode(Modes.LOGIN)}>
 				already have an account
 			</Button>
-		</Grid>
+		</Stack>
 	);
 
 	return (
