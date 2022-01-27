@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-	AppBar,
-	Button,
-	createTheme,
-	CssBaseline,
-	ThemeProvider,
-	Toolbar,
-	Typography,
-} from '@mui/material';
+import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { Routes, Route } from 'react-router-dom';
 import Home from './Pages/Home/Home';
 import { Footer } from './Common/Footer/Footer';
@@ -22,19 +14,18 @@ function App() {
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
-			<AppBar position={'static'}>
-				<Toolbar>
-					<Typography component={'div'} sx={{ flexGrow: 1 }}>
-						Reghaven
-					</Typography>
-					<Button>Login</Button>
-				</Toolbar>
-			</AppBar>
-			<Routes>
-				<Route path={'/'} element={<Home />} />
-				<Route path={'/app'} />
-				<Route path={'/imprint'} />
-			</Routes>
+			<Box
+				sx={{
+					width: '100%',
+					minHeight: '100vh',
+				}}
+			>
+				<Routes>
+					<Route path={'/'} element={<Home />} />
+					<Route path={'/app'} />
+					<Route path={'/imprint'} />
+				</Routes>
+			</Box>
 			<Footer />
 		</ThemeProvider>
 	);
