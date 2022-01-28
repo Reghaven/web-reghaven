@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentMeta } from '@storybook/react';
 import { Character } from './Character';
+import { AssetType, UsableAsset } from 'lib-storyteller';
 
 export default {
 	component: Character,
@@ -9,7 +10,24 @@ export default {
 export const Primary = () => (
 	<Character
 		character={{
-			assetInstances: [],
+			assetInstances: [
+				{
+					count: 1,
+					asset: {
+						uuid: 'a2dc1337-007a-46a5-b273-f786e60e8c89',
+						name: 'Job: Café',
+						type: AssetType.Normal,
+					},
+				},
+				{
+					count: 10,
+					asset: {
+						uuid: 'a2dc1337-007a-46a5-b273-f786e60e8c89',
+						name: 'Cigarettes',
+						type: AssetType.Usable,
+					} as UsableAsset,
+				},
+			],
 			attributes: [
 				{
 					attribute: {
