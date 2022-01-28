@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Typography, Paper } from '@mui/material';
+import { Typography, Paper, Stack } from '@mui/material';
 import { Character as LibCharacter } from 'lib-storyteller';
+import { CharacterAttribute } from '../CharacterAttribute/CharacterAttribute';
 
 export function Character(props: {
 	character: LibCharacter;
@@ -8,12 +9,16 @@ export function Character(props: {
 	return (
 		<Paper elevation={2} sx={{ padding: 2 }}>
 			<Typography variant={'h5'}>{props.character.name}</Typography>
+
 			<Typography variant={'h6'}>Stats</Typography>
-			{props.character.attributes.map((attribute) => (
-				<Typography key={attribute.attribute.uuid}>
-					{attribute.attribute.name}
-				</Typography>
-			))}
+			<Stack direction={'row'} spacing={2}>
+				{props.character.attributes.map((attribute) => (
+					<CharacterAttribute
+						key={attribute.attribute.uuid}
+						characterAttribute={attribute}
+					/>
+				))}
+			</Stack>
 		</Paper>
 	);
 }

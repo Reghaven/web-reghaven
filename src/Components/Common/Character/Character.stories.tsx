@@ -14,9 +14,16 @@ export const Primary = () => (
 				{
 					attribute: {
 						name: 'strength',
-						uuid: '#gen.uuid#',
+						uuid: 'bd23766b-3c3a-45f4-ba93-3034dc21056a',
 					},
 					pointsCollected: 10,
+				},
+				{
+					attribute: {
+						name: 'intelligence',
+						uuid: '32cd4e89-af6b-4473-952f-e9d7d151c816',
+					},
+					pointsCollected: 12,
 				},
 			],
 			equipment: {
