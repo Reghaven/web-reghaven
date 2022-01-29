@@ -1,16 +1,20 @@
 import { useState } from 'react';
 
-export function useLogin() {
-	const [sessionToken, setSessionToken] = useState<string | undefined>(
-		undefined
-	);
+export function useRegister() {
 	const [error, setError] = useState<string | undefined>(undefined);
+	const [registrationSuccessful, setRegistrationSuccessful] = useState<
+		boolean | undefined
+	>(undefined);
 
 	/**
-	 * used to authenticate an account
+	 * used to create new accounts
 	 * @param opts
 	 */
-	async function login(opts: { username: string; password: string }) {
+	async function register(opts: {
+		username: string;
+		email: string;
+		password: string;
+	}) {
 		try {
 			const response = await fetch('http://localhost:8080/graphql', {
 				method: 'POST',
@@ -19,9 +23,9 @@ export function useLogin() {
 				},
 				body: JSON.stringify({
 					query: `
-					query login($username: String, $password: String) {
-						login(username: $username, password: $password) {
-							token
+					query register($username: String, email: $string, $password: String) {
+						register(username: $username, email: $email, password: $password) {
+							registered
 							error {
 								message
 							}
@@ -30,21 +34,22 @@ export function useLogin() {
 				`,
 					variables: {
 						username: opts.username,
+						email: opts.email,
 						password: opts.password,
 					},
 				}),
 			});
 			const body = await response.json();
-			const token = body.token;
-			setSessionToken(token);
-
+			const registered = body.registered;
+			setRegistrationSuccessful(registered);
 			if (body.error) {
 				setError(body.error.message);
 			}
 		} catch (error) {
+			setRegistrationSuccessful(false);
 			setError((error as Error).message);
 		}
 	}
 
-	return [login, sessionToken, error];
+	return [register, registrationSuccessful, error];
 }
