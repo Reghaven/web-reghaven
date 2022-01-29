@@ -2,12 +2,13 @@ import * as React from 'react';
 import { Typography, Paper, Stack, Box } from '@mui/material';
 import { Character as LibCharacter } from 'lib-storyteller';
 import { CharacterAttribute } from '../CharacterAttribute/CharacterAttribute';
+import { AssetInstance } from '../AssetInstance/AssetInstance';
 
 export function Character(props: {
 	character: LibCharacter;
 }): React.ReactElement {
 	return (
-		<Paper elevation={2} sx={{ padding: 2 }}>
+		<Paper sx={{ padding: 4 }} variant={'outlined'}>
 			<Typography variant={'h5'}>{props.character.name}</Typography>
 
 			<Stack spacing={4}>
@@ -25,9 +26,14 @@ export function Character(props: {
 
 				<Box>
 					<Typography variant={'h6'}>Belongings</Typography>
-					{props.character.assetInstances.map((instance) => (
-						<Box key={instance.asset.uuid} />
-					))}
+					<Stack direction={'row'} spacing={1}>
+						{props.character.assetInstances.map((instance) => (
+							<AssetInstance
+								key={instance.asset.uuid}
+								assetInstance={instance}
+							/>
+						))}
+					</Stack>
 				</Box>
 			</Stack>
 		</Paper>

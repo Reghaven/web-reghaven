@@ -7,6 +7,7 @@ export function CharacterAttribute(props: {
 }): React.ReactElement {
 	return (
 		<Paper
+			variant={'outlined'}
 			elevation={1}
 			sx={{
 				height: 80,
