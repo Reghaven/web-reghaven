@@ -7,9 +7,3 @@ export default {
 } as ComponentMeta<typeof LoginBox>;
 
 export const Primary = () => <LoginBox />;
-
-export const InvalidCredentials = () => (
-	<LoginBox loginErrorText={'invalid credentials'} />
-);
-
-export const IsLoading = () => <LoginBox loading />;

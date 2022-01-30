@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Alert,
 	Typography,
@@ -9,30 +9,19 @@ import {
 	Stack,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+import { useLogin } from '../../../Hooks/useLogin';
+import { useRegister } from '../../../Hooks/useRegister';
 
-export interface LoginBoxLoginResult {
-	username: string;
-	password: string;
+enum Modes {
+	LOGIN,
+	REGISTER,
 }
 
-export interface LoginBoxRegisterResult {
-	username: string;
-	email: string;
-	password: string;
-}
-
-export function LoginBox(props: {
-	loginErrorText?: string;
-	loading?: boolean;
-	onLogin?: (result: LoginBoxLoginResult) => unknown;
-	onRegister?: (result: LoginBoxRegisterResult) => unknown;
-}) {
-	enum Modes {
-		LOGIN,
-		REGISTER,
-	}
-
+export function LoginBox(props: { onToken?: (token: string) => unknown }) {
 	const [mode, setMode] = useState<Modes>(Modes.LOGIN);
+	const [login, token, loginError] = useLogin();
+	const [register, registerSuccess, registerError] = useRegister();
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	const [loginCredentials, setLoginCredentials] = useState({
 		username: '',
@@ -44,14 +33,19 @@ export function LoginBox(props: {
 		email: '',
 	});
 
+	// emit token
+	useEffect(() => {
+		if (props.onToken && token) {
+			props.onToken(token);
+		}
+	}, [token]);
+
 	const Login = (
 		<Stack spacing={2}>
 			<Typography variant={'h5'} align={'center'}>
 				Login
 			</Typography>
-			{props.loginErrorText && (
-				<Alert severity={'error'}>{props.loginErrorText}</Alert>
-			)}
+			{loginError && <Alert severity={'error'}>{loginError}</Alert>}
 			<TextField
 				value={loginCredentials.username}
 				onChange={(event) =>
@@ -78,15 +72,21 @@ export function LoginBox(props: {
 				sx={{ width: '100%' }}
 			/>
 			<LoadingButton
-				loading={props.loading || false}
+				loading={isLoading}
 				variant={'contained'}
-				onClick={() =>
-					props.onLogin &&
-					props.onLogin({
-						username: loginCredentials.username,
-						password: loginCredentials.password,
-					})
-				}
+				onClick={async () => {
+					if (
+						loginCredentials.password &&
+						loginCredentials.username
+					) {
+						setIsLoading(true);
+						await login({
+							username: loginCredentials.username,
+							password: loginCredentials.password,
+						});
+						setIsLoading(false);
+					}
+				}}
 			>
 				Login
 			</LoadingButton>
@@ -101,6 +101,10 @@ export function LoginBox(props: {
 			<Typography variant={'h5'} align={'center'}>
 				Create new account
 			</Typography>
+			{registerError && <Alert severity={'error'}>{registerError}</Alert>}
+			{registerSuccess && (
+				<Alert severity={'success'}>Registration Successful</Alert>
+			)}
 			<TextField
 				value={registerCredentials.username}
 				onChange={(event) =>
@@ -139,15 +143,16 @@ export function LoginBox(props: {
 				sx={{ width: '100%' }}
 			/>
 			<LoadingButton
-				onClick={() =>
-					props.onRegister &&
-					props.onRegister({
+				onClick={async () => {
+					setIsLoading(true);
+					await register({
 						username: registerCredentials.username,
 						password: registerCredentials.password,
 						email: registerCredentials.email,
-					})
-				}
-				loading={props.loading || false}
+					});
+					setIsLoading(false);
+				}}
+				loading={isLoading}
 				variant={'contained'}
 			>
 				Register

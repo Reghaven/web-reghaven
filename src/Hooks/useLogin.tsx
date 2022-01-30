@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
-export function useLogin() {
+export function useLogin(): [
+	(opts: { username: string; password: string }) => void,
+	string | undefined,
+	string | undefined
+] {
 	const [sessionToken, setSessionToken] = useState<string | undefined>(
 		undefined
 	);

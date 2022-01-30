@@ -1,6 +1,14 @@
 import { useState } from 'react';
 
-export function useRegister() {
+export function useRegister(): [
+	(opts: {
+		username: string;
+		email: string;
+		password: string;
+	}) => Promise<void>,
+	boolean | undefined,
+	string | undefined
+] {
 	const [error, setError] = useState<string | undefined>(undefined);
 	const [registrationSuccessful, setRegistrationSuccessful] = useState<
 		boolean | undefined
